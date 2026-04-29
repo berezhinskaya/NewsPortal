@@ -1,0 +1,40 @@
+﻿<div class="top-row ps-3 navbar navbar-dark" style="background-color: #1a1a1a;">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="" style="color: #ffffff;">NewsPortal</a>
+    </div>
+</div>
+
+<div class="nav-scrollable" style="background-color: #1a1a1a;">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill"></span> Главная
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="add-news">
+                <span class="bi bi-plus-square-fill"></span> Добавить новость
+            </NavLink>
+        </div>
+        @* ВОТ ОНА — ВЕРНУЛ ПОГОДУ *@
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-cloud-sun-fill"></span> Погода
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+<style>
+    .nav-link {
+        color: #d1d1d1 !important;
+        border-radius: 8px;
+        margin-top: 5px;
+        transition: 0.3s;
+    }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: #800020 !important; /* Наш бордовый */
+            color: white !important;
+        }
+</style>

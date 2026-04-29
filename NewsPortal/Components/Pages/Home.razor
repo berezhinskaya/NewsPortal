@@ -1,0 +1,120 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using NewsPortal.Models
+@using NewsPortal.Services
+@inject NewsService NewsService
+
+<div class="container-fluid p-0">
+    <div class="py-5 mb-5 shadow-sm" style="background: linear-gradient(135deg, #800020 0%, #4a0012 100%);">
+        <div class="container text-white text-center">
+            <h1 class="display-4 fw-bold animate-fade">Лента событий</h1>
+            <p class="opacity-75">Последние новости и фотографии</p>
+
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-6">
+                    <div class="input-group input-group-lg shadow-lg" style="border-radius: 50px; overflow: hidden;">
+                        <span class="input-group-text border-0 bg-white text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-0 p-3"
+                               placeholder="Поиск по заголовкам..."
+                               @bind="SearchTerm" @bind:event="oninput" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        @if (FilteredNews == null)
+        {
+            <div class="text-center py-5"><div class="spinner-border text-danger"></div></div>
+        }
+        else
+        {
+            <div class="row">
+                @foreach (var (item, index) in FilteredNews.Select((v, i) => (v, i)))
+                {
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 border-0 shadow-sm animate-fade news-card-hover"
+                             style="border-radius: 16px; overflow: hidden; animation-delay: @(index * 0.1)s;">
+
+                            @* ОТОБРАЖЕНИЕ КАРТИНКИ *@
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <div style="height: 200px; width: 100%; overflow: hidden;">
+                                    <img src="@item.ImageUrl" alt="news"
+                                         style="width: 100%; height: 100%; object-fit: cover;" />
+                                </div>
+                            }
+
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold" style="color: #2d3436;">@item.Title</h5>
+                                <p class="text-secondary small">
+                                    @(item.Content.Length > 120 ? item.Content.Substring(0, 117) + "..." : item.Content)
+                                </p>
+
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                    <small class="fw-bold" style="color: #800020;">@item.Created.ToString("dd.MM.yyyy")</small>
+                                    <button class="btn btn-sm btn-outline-danger border-0" @onclick="() => DeleteNews(item.Id)">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<News>? allNews;
+    private string searchTerm = "";
+
+    private string SearchTerm
+    {
+        get => searchTerm;
+        set { searchTerm = value; InvokeAsync(StateHasChanged); }
+    }
+
+    private List<News>? FilteredNews => string.IsNullOrWhiteSpace(SearchTerm)
+        ? allNews
+        : allNews?.Where(x => x.Title.Contains(SearchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+
+    protected override async Task OnInitializedAsync()
+    {
+        allNews = await NewsService.GetAllNewsAsync();
+    }
+
+    private async Task DeleteNews(int id)
+    {
+        await NewsService.DeleteNewsAsync(id);
+        allNews = await NewsService.GetAllNewsAsync();
+    }
+}
+
+<style>
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade {
+        animation: fadeInUp 0.5s ease backwards;
+    }
+
+    .news-card-hover {
+        transition: all 0.3s ease;
+    }
+
+        .news-card-hover:hover {
+            transform: translateY(-8px);
+        }
+</style>

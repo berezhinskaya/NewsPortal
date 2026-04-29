@@ -1,0 +1,106 @@
+﻿@page "/add-news"
+@rendermode InteractiveServer
+@using NewsPortal.Models
+@using NewsPortal.Services
+@inject NewsService NewsService
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7">
+
+            <div class="card border-0 shadow-lg p-4 animate-fade" style="border-radius: 16px; background: #ffffff;">
+                <h3 class="fw-bold mb-1" style="color: #800020;">Новая публикация</h3>
+                <p class="text-muted small mb-4">Заполните поля, чтобы создать новость с картинкой</p>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-uppercase" style="color: #2d3436;">Заголовок</label>
+                    <input @bind="newTitle" class="form-control border-0 bg-light p-3 custom-input"
+                           placeholder="Введите название..." style="border-radius: 10px;" />
+                </div>
+
+                @* ПОЛЕ ДЛЯ ССЫЛКИ НА КАРТИНКУ *@
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-uppercase" style="color: #2d3436;">Ссылка на картинку (URL)</label>
+                    <input @bind="imageUrl" class="form-control border-0 bg-light p-3 custom-input"
+                           placeholder="https://example.com/photo.jpg" style="border-radius: 10px;" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-bold text-uppercase" style="color: #2d3436;">Содержание</label>
+                    <textarea @bind="newContent" class="form-control border-0 bg-light p-3 custom-input"
+                              rows="4" placeholder="Текст новости..."
+                              style="border-radius: 10px; resize: none;"></textarea>
+                </div>
+
+                <button class="btn btn-lg w-100 text-white fw-bold shadow-sm"
+                        @onclick="Save"
+                        disabled="@isProcessing"
+                        style="border-radius: 10px; background: #800020; transition: all 0.3s ease;">
+                    @if (isProcessing)
+                    {
+                        <div class="spinner-border spinner-border-sm text-light" role="status"></div>
+                    }
+                    else
+                    {
+                        <span>Опубликовать новость</span>
+                    }
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string newTitle = "";
+    private string newContent = "";
+    private string imageUrl = ""; // Переменная для URL
+    private bool isProcessing = false;
+
+    private async Task Save()
+    {
+        if (!string.IsNullOrWhiteSpace(newTitle))
+        {
+            isProcessing = true;
+            await Task.Delay(500);
+
+            var news = new News
+                {
+                    Title = newTitle,
+                    Content = newContent,
+                    ImageUrl = imageUrl, // Сохраняем URL в базу
+                    Created = DateTime.Now
+                };
+
+            await NewsService.AddNewsAsync(news);
+
+            // Очистка полей
+            newTitle = "";
+            newContent = "";
+            imageUrl = "";
+            isProcessing = false;
+        }
+    }
+}
+
+<style>
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade {
+        animation: fadeInUp 0.5s ease backwards;
+    }
+
+    .custom-input:focus {
+        border: 1px solid #800020 !important;
+        outline: none;
+    }
+</style>

@@ -1,0 +1,41 @@
+:root {
+    --brand-burgundy: #800020; /* Тот самый бордовый */
+    --brand-dark: #1a1a1a; /* Почти черный для акцентов */
+    --brand-grey: #2d3436; /* Графитовый для текста */
+    --brand-bg: #fdfdfd; /* Очень светлый фон страниц */
+}
+
+body {
+    background-color: var(--brand-bg);
+    color: var(--brand-grey);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Стили для всех основных кнопок проекта */
+.btn-primary {
+    background-color: var(--brand-burgundy) !important;
+    border-color: var(--brand-burgundy) !important;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #600018 !important;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(128, 0, 32, 0.2);
+    }
+
+/* Красивые ссылки */
+a {
+    color: var(--brand-burgundy);
+}
+
+    a:hover {
+        color: #600018;
+    }
+
+/* Общий стиль карточек для всего сайта */
+.card {
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+}
