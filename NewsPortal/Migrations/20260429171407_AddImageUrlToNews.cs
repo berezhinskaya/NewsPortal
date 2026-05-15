@@ -4,10 +4,8 @@
 
 namespace NewsPortal.Migrations
 {
-    /// <inheritdoc />
     public partial class AddImageUrlToNews : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
@@ -16,8 +14,6 @@ namespace NewsPortal.Migrations
                 type: "TEXT",
                 nullable: true);
         }
-
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(

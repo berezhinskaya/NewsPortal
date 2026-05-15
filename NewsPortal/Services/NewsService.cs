@@ -10,10 +10,14 @@ namespace NewsPortal.Services
 
         public NewsService(AppDbContext context) => _context = context;
 
-        // Переименовали в GetAllNewsAsync, чтобы AddNews.razor его "видел"
+        // Получение всех новостей для главной страницы
         public async Task<List<News>> GetAllNewsAsync()
         {
             return await _context.AllNews.ToListAsync();
+        }
+        public async Task<News?> GetNewsByIdAsync(int id)
+        {
+            return await _context.AllNews.FindAsync(id);
         }
 
         // Метод для добавления новости
@@ -23,7 +27,7 @@ namespace NewsPortal.Services
             await _context.SaveChangesAsync();
         }
 
-        // Метод для удаления новости (если понадобится)
+        // Метод для удаления новости
         public async Task DeleteNewsAsync(int id)
         {
             var news = await _context.AllNews.FindAsync(id);

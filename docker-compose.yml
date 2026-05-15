@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  newsportal:
+    image: ${DOCKER_REGISTRY-}newsportal
+    build:
+      context: .
+      dockerfile: NewsPortal/Dockerfile
+    ports:
+      - "8080:8080"

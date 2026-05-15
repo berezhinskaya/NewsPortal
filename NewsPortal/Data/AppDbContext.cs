@@ -7,5 +7,5 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<News> AllNews { get; set; } // Это наша таблица новостей
+    public DbSet<News> AllNews { get; set; }
 }

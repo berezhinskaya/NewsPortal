@@ -1,0 +1,56 @@
+﻿@page "/news/{Id:int}"
+@using NewsPortal.Models
+@using NewsPortal.Services
+@inject NewsService NewsService
+
+<div class="container py-5">
+    @if (currentNews == null)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-danger"></div>
+            <p class="mt-2">Загрузка новости...</p>
+        </div>
+    }
+    else
+    {
+        <div class="mb-4">
+            <a href="/" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Назад к ленте
+            </a>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                @if (!string.IsNullOrEmpty(currentNews.ImageUrl))
+                {
+                    <div class="mb-4 shadow-sm" style="border-radius: 16px; overflow: hidden;">
+                        <img src="@currentNews.ImageUrl" class="img-fluid w-100" alt="news"
+                             style="object-fit: cover; max-height: 500px;" />
+                    </div>
+                }
+
+                <h1 class="display-5 fw-bold mb-3" style="color: #2d3436;">@currentNews.Title</h1>
+
+                <div class="d-flex align-items-center text-muted mb-4 pb-3 border-bottom">
+                    <span class="fw-bold" style="color: #800020;">
+                        <i class="bi bi-calendar-event me-1"></i> @currentNews.Created.ToString("dd MMMM yyyy")
+                    </span>
+                </div>
+
+                <div class="news-full-text" style="font-size: 1.15rem; line-height: 1.8; color: #444; white-space: pre-line;">
+                    @currentNews.Content
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private News? currentNews;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentNews = await NewsService.GetNewsByIdAsync(Id);
+    }
+}

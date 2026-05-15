@@ -5,6 +5,7 @@
 @inject NewsService NewsService
 
 <div class="container-fluid p-0">
+    @* Хедер с поиском *@
     <div class="py-5 mb-5 shadow-sm" style="background: linear-gradient(135deg, #800020 0%, #4a0012 100%);">
         <div class="container text-white text-center">
             <h1 class="display-4 fw-bold animate-fade">Лента событий</h1>
@@ -28,6 +29,10 @@
         {
             <div class="text-center py-5"><div class="spinner-border text-danger"></div></div>
         }
+        else if (!FilteredNews.Any())
+        {
+            <div class="text-center py-5"><h3>Новостей пока нет...</h3></div>
+        }
         else
         {
             <div class="row">
@@ -37,22 +42,44 @@
                         <div class="card h-100 border-0 shadow-sm animate-fade news-card-hover"
                              style="border-radius: 16px; overflow: hidden; animation-delay: @(index * 0.1)s;">
 
-                            @* ОТОБРАЖЕНИЕ КАРТИНКИ *@
-                            @if (!string.IsNullOrEmpty(item.ImageUrl))
-                            {
-                                <div style="height: 200px; width: 100%; overflow: hidden;">
-                                    <img src="@item.ImageUrl" alt="news"
-                                         style="width: 100%; height: 100%; object-fit: cover;" />
-                                </div>
-                            }
+                            @* КАРТИНКА ТЕПЕРЬ ТОЖЕ КЛИКАБЕЛЬНАЯ *@
+                            <a href="/news/@item.Id">
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <div style="height: 200px; width: 100%; overflow: hidden;">
+                                        <img src="@item.ImageUrl" alt="news"
+                                             style="width: 100%; height: 100%; object-fit: cover;" />
+                                    </div>
+                                }
+                                else
+                                {
+                                    @* Заглушка, если нет фото *@
+                                    <div style="height: 200px; width: 100%; background: #eee; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                    </div>
+                                }
+                            </a>
 
-                            <div class="card-body p-4">
-                                <h5 class="fw-bold" style="color: #2d3436;">@item.Title</h5>
-                                <p class="text-secondary small">
+                            <div class="card-body p-4 d-flex flex-column">
+                                @* ЗАГОЛОВОК-ССЫЛКА *@
+                                <h5 class="fw-bold">
+                                    <a href="/news/@item.Id" style="color: #2d3436; text-decoration: none;" class="news-title-link">
+                                        @item.Title
+                                    </a>
+                                </h5>
+
+                                <p class="text-secondary small flex-grow-1">
                                     @(item.Content.Length > 120 ? item.Content.Substring(0, 117) + "..." : item.Content)
                                 </p>
 
-                                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                @* КНОПКА "ЧИТАТЬ ДАЛЕЕ" *@
+                                <div class="mb-3">
+                                    <a href="/news/@item.Id" class="text-danger fw-bold btn-link" style="text-decoration: none; font-size: 0.9rem;">
+                                        Читать полностью →
+                                    </a>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
                                     <small class="fw-bold" style="color: #800020;">@item.Created.ToString("dd.MM.yyyy")</small>
                                     <button class="btn btn-sm btn-outline-danger border-0" @onclick="() => DeleteNews(item.Id)">
                                         <i class="bi bi-trash"></i>
@@ -116,5 +143,14 @@
 
         .news-card-hover:hover {
             transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
         }
+
+    .news-title-link:hover {
+        color: #800020 !important;
+    }
+
+    .btn-link:hover {
+        text-decoration: underline !important;
+    }
 </style>
