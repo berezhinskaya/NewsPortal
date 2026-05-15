@@ -4,9 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddDbContext<AppDbContext>(options =>
-   options.UseSqlite("Data Source=news.db"));
+    options.UseSqlite("Data Source=news.db"));
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
