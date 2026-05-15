@@ -4,12 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем базу данных
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=news.db"));
 
-// РЕШЕНИЕ ОШИБКИ CS1929:
-// Если AddInteractiveServerComponents не работает, используем базовую регистрацию
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
@@ -17,6 +15,11 @@ builder.Services.AddScoped<NewsService>();
 builder.Services.AddScoped(sp => new HttpClient { Timeout = TimeSpan.FromSeconds(30) });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreated();
+}
 
 if (!app.Environment.IsDevelopment())
 {
@@ -28,8 +31,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
-// РЕШЕНИЕ ОШИБКИ С КНОПКАМИ:
-// Если этот блок подчеркивается красным, замени его на app.MapRazorComponents<NewsPortal.Components.App>();
 app.MapRazorComponents<NewsPortal.Components.App>()
     .AddInteractiveServerRenderMode();
 
