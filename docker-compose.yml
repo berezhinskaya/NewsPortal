@@ -8,9 +8,3 @@ services:
       dockerfile: NewsPortal/Dockerfile
     ports:
       - "8080:80"
-      
-  browser-opener:
-    image: alpine
-    depends_on:
-      - newsportal
-    entrypoint: ["cmd.exe", "/c", "start", "http://localhost:8080"]
