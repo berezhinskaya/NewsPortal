@@ -8,9 +8,8 @@ services:
       dockerfile: NewsPortal/Dockerfile
     ports:
       - "8080:80"
-
     volumes:
-      - news-data:/app/db
+      - news-data:/app/news.db
 
 volumes:
   news-data:
