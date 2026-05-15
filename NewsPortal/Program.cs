@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=news.db"));
+   options.UseSqlite("Data Source=db/news.db"));
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
